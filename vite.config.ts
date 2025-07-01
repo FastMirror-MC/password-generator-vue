@@ -12,6 +12,7 @@ export default defineConfig({
     UnoCSS(),
     Inspect()
   ],
+  base: '/password-generator-vue/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
