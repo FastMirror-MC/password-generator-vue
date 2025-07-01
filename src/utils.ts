@@ -128,20 +128,25 @@ export const generatePassword = ({
     if (special) password += allowedCharacters.special[Math.floor(Math.random() * allowedCharacters.special.length)];
 
     // If the password is not long enough, add random characters
-    const scaleSum = Object.values(scale).reduce((sum, value) => sum + value, 0)
+    const availableTypes = []
+    if (allowedCharacters.lower.length > 0) availableTypes.push({ type: 'lower', weight: scale.lower })
+    if (allowedCharacters.upper.length > 0) availableTypes.push({ type: 'upper', weight: scale.upper })
+    if (allowedCharacters.number.length > 0) availableTypes.push({ type: 'number', weight: scale.number })
+    if (allowedCharacters.special.length > 0) availableTypes.push({ type: 'special', weight: scale.special })
+    
+    const scaleSum = availableTypes.reduce((sum, item) => sum + item.weight, 0)
+    
     while (password.length < length) {
         const random = Math.random() * scaleSum
-        if (random < scale.lower && allowedCharacters.lower.length > 0) {
-            password += allowedCharacters.lower[Math.floor(Math.random() * allowedCharacters.lower.length)]
-        }
-        if (random < scale.upper && allowedCharacters.upper.length > 0) {
-            password += allowedCharacters.upper[Math.floor(Math.random() * allowedCharacters.upper.length)]
-        }
-        if (random < scale.number && allowedCharacters.number.length > 0) {
-            password += allowedCharacters.number[Math.floor(Math.random() * allowedCharacters.number.length)]
-        }
-        if (random < scale.special && allowedCharacters.special.length > 0) {
-            password += allowedCharacters.special[Math.floor(Math.random() * allowedCharacters.special.length)]
+        let currentSum = 0
+        
+        for (const item of availableTypes) {
+            currentSum += item.weight
+            if (random <= currentSum) {
+                const chars = allowedCharacters[item.type as keyof typeof allowedCharacters]
+                password += chars[Math.floor(Math.random() * chars.length)]
+                break
+            }
         }
     }
 
