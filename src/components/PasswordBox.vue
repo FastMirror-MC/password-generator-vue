@@ -9,7 +9,7 @@ const props = defineProps<{
 const password = useModel(props, 'modelValue')
 
 const copy = () => {
-    navigator.clipboard.writeText(password.value).catch(() => {})
+    navigator.clipboard.writeText(password.value)
 }
 </script>
 
@@ -19,7 +19,7 @@ const copy = () => {
             'w-full': password.trim().length === 0
         }" />
         <div class="action-area">
-            <button class="btn copy-btn" aria-label="复制密码" @click="copy">
+            <button class="btn copy-btn" @click="copy">
                 <div class="i-mingcute:copy-fill"></div>
             </button>
         </div>

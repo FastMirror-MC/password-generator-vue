@@ -49,7 +49,7 @@ watch(password, (val: string) => {
     password.value = password.value.replace(/\s/g, '');
     return;
   }
-  if (password.value.length === 0) {
+  if (password.value.length < 0) {
     security.length = 0;
     return;
   }
@@ -71,46 +71,46 @@ const minPasswordLength = computed(() => {
   <main>
     <PasswordBox v-model="password" />
     <div class="input-wrapper">
-      <label class="label" for="password-length">
+      <span class="label">
         密码长度：
-      </label>
-      <RangeInput id="password-length" v-model="passwordLength" :min="minPasswordLength" :max="100" />
+      </span>
+      <RangeInput v-model="passwordLength" :min="minPasswordLength" :max="100" />
     </div>
     <div class="input-wrapper">
-      <label class="label" id="label-include-number">
+      <span class="label">
         包含数字：
-      </label>
-      <SwitchInput v-model="config.includeNumber" aria-labelledby="label-include-number" />
+      </span>
+      <SwitchInput v-model="config.includeNumber" />
     </div>
     <div class="input-wrapper">
-      <label class="label" id="label-include-lowercase">
+      <span class="label">
         包含小写字母：
-      </label>
-      <SwitchInput v-model="config.includeLowercase" aria-labelledby="label-include-lowercase" />
+      </span>
+      <SwitchInput v-model="config.includeLowercase" />
     </div>
     <div class="input-wrapper">
-      <label class="label" id="label-include-uppercase">
+      <span class="label">
         包含大写字母：
-      </label>
-      <SwitchInput v-model="config.includeUppercase" aria-labelledby="label-include-uppercase" />
+      </span>
+      <SwitchInput v-model="config.includeUppercase" />
     </div>
     <div class="input-wrapper">
-      <label class="label" id="label-include-symbol">
+      <span class="label">
         包含特殊符号：
-      </label>
-      <SwitchInput v-model="config.includeSymbol" aria-labelledby="label-include-symbol" />
+      </span>
+      <SwitchInput v-model="config.includeSymbol" />
     </div>
     <div class="flex flex-col gap-2">
       <div class="input-wrapper">
-        <label class="label" id="label-ignore-chars">
+        <span class="label">
           排除字符：
-        </label>
-        <SwitchInput v-model="config.ignoreChars" aria-labelledby="label-ignore-chars" />
+        </span>
+        <SwitchInput v-model="config.ignoreChars" />
       </div>
       <input class="ignore-input" :class="{ hide: !config.ignoreChars }" type="text" v-model="ignoreChars" />
     </div>
     <button class="block-btn" @click="refreshPassword">生成密码</button>
-    <div v-if="security.length !== 0" class="security-wrapper" aria-live="polite">
+    <div v-if="security.length !== 0" class="security-wrapper">
       <div class="security-item" :class="[item.type]" v-for="item in security" :key="item.text">
         <div v-if="item.type == 'warn'" class="icon i-mingcute:alert-fill"></div>
         <div v-if="item.type == 'error'" class="icon i-mingcute:alert-octagon-fill"></div>

@@ -64,7 +64,7 @@ const onPointerUp = (event: PointerEvent) => {
         <div class="slider-wrapper">
             <div ref="sliderRef" class="slider" :style="{
                 '--precent': currentPrecent
-            }" :class="{ active: isListening }" role="slider" :aria-valuemin="min" :aria-valuemax="max" :aria-valuenow="value" tabindex="0" @pointerdown="onPointerDown" @keydown.left.prevent="value = Math.max(min, value - 1)" @keydown.right.prevent="value = Math.min(max, value + 1)" @keydown.down.prevent="value = Math.max(min, value - 1)" @keydown.up.prevent="value = Math.min(max, value + 1)">
+            }" :class="{ active: isListening }" @pointerdown="onPointerDown">
                 <div class="slider__bar"></div>
                 <div class="slider__button"></div>
                 <div class="slider__protip">{{ value }}</div>
