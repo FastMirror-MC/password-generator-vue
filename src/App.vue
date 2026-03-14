@@ -71,46 +71,46 @@ const minPasswordLength = computed(() => {
   <main>
     <PasswordBox v-model="password" />
     <div class="input-wrapper">
-      <span class="label">
+      <label class="label" id="label-length">
         密码长度：
-      </span>
-      <RangeInput v-model="passwordLength" :min="minPasswordLength" :max="100" />
+      </label>
+      <RangeInput v-model="passwordLength" :min="minPasswordLength" :max="100" aria-labelledby="label-length" />
     </div>
     <div class="input-wrapper">
-      <span class="label">
+      <label class="label" id="label-number">
         包含数字：
-      </span>
-      <SwitchInput v-model="config.includeNumber" />
+      </label>
+      <SwitchInput v-model="config.includeNumber" aria-labelledby="label-number" />
     </div>
     <div class="input-wrapper">
-      <span class="label">
+      <label class="label" id="label-lowercase">
         包含小写字母：
-      </span>
-      <SwitchInput v-model="config.includeLowercase" />
+      </label>
+      <SwitchInput v-model="config.includeLowercase" aria-labelledby="label-lowercase" />
     </div>
     <div class="input-wrapper">
-      <span class="label">
+      <label class="label" id="label-uppercase">
         包含大写字母：
-      </span>
-      <SwitchInput v-model="config.includeUppercase" />
+      </label>
+      <SwitchInput v-model="config.includeUppercase" aria-labelledby="label-uppercase" />
     </div>
     <div class="input-wrapper">
-      <span class="label">
+      <label class="label" id="label-symbol">
         包含特殊符号：
-      </span>
-      <SwitchInput v-model="config.includeSymbol" />
+      </label>
+      <SwitchInput v-model="config.includeSymbol" aria-labelledby="label-symbol" />
     </div>
     <div class="flex flex-col gap-2">
       <div class="input-wrapper">
-        <span class="label">
+        <label class="label" id="label-ignore">
           排除字符：
-        </span>
-        <SwitchInput v-model="config.ignoreChars" />
+        </label>
+        <SwitchInput v-model="config.ignoreChars" aria-labelledby="label-ignore" />
       </div>
       <input class="ignore-input" :class="{ hide: !config.ignoreChars }" type="text" v-model="ignoreChars" />
     </div>
     <button class="block-btn" @click="refreshPassword">生成密码</button>
-    <div v-if="security.length !== 0" class="security-wrapper">
+    <div v-if="security.length !== 0" class="security-wrapper" aria-live="polite">
       <div class="security-item" :class="[item.type]" v-for="item in security" :key="item.text">
         <div v-if="item.type == 'warn'" class="icon i-mingcute:alert-fill"></div>
         <div v-if="item.type == 'error'" class="icon i-mingcute:alert-octagon-fill"></div>
