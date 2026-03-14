@@ -49,7 +49,7 @@ watch(password, (val: string) => {
     password.value = password.value.replace(/\s/g, '');
     return;
   }
-  if (password.value.length < 0) {
+  if (password.value.length === 0) {
     security.length = 0;
     return;
   }

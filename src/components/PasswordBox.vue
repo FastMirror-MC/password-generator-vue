@@ -9,7 +9,7 @@ const props = defineProps<{
 const password = useModel(props, 'modelValue')
 
 const copy = () => {
-    navigator.clipboard.writeText(password.value)
+    navigator.clipboard.writeText(password.value).catch(() => {})
 }
 </script>
 

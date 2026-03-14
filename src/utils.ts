@@ -4,11 +4,19 @@ import type { SecurityItem } from './App.vue'
 
 let weakPasswordList: string[] = []
 
-fetch(weakPasswordBin).then(res => res.arrayBuffer()).then(buffer => {
-    const weakPasswords = pako.inflate(buffer)
-    const decoder = new TextDecoder()
-    weakPasswordList = decoder.decode(weakPasswords).split("\n")
-})
+fetch(weakPasswordBin)
+    .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        return res.arrayBuffer()
+    })
+    .then(buffer => {
+        const weakPasswords = pako.inflate(buffer)
+        const decoder = new TextDecoder()
+        weakPasswordList = decoder.decode(weakPasswords).split("\n")
+    })
+    .catch(() => {
+        weakPasswordList = []
+    })
 
 export const isWeakPassword = (password: string): number => {
     return weakPasswordList.indexOf(password)
@@ -59,6 +67,18 @@ export const checkSecurity = (password: string): SecurityItem[] => {
     }
 
     return security
+}
+
+const cryptoRandInt = (max: number): number => {
+    const array = new Uint32Array(1)
+    crypto.getRandomValues(array)
+    return array[0] % max
+}
+
+const cryptoRandFloat = (): number => {
+    const array = new Uint32Array(1)
+    crypto.getRandomValues(array)
+    return array[0] / (0xFFFFFFFF + 1)
 }
 
 const scale: Record<'lower' | 'upper' | 'number' | 'special', number> = {
@@ -122,10 +142,10 @@ export const generatePassword = ({
     }
 
     // Ensure at least one character from each selected type
-    if (lowercase) password += allowedCharacters.lower[Math.floor(Math.random() * allowedCharacters.lower.length)];
-    if (uppercase) password += allowedCharacters.upper[Math.floor(Math.random() * allowedCharacters.upper.length)];
-    if (numbers) password += allowedCharacters.number[Math.floor(Math.random() * allowedCharacters.number.length)];
-    if (special) password += allowedCharacters.special[Math.floor(Math.random() * allowedCharacters.special.length)];
+    if (lowercase) password += allowedCharacters.lower[cryptoRandInt(allowedCharacters.lower.length)];
+    if (uppercase) password += allowedCharacters.upper[cryptoRandInt(allowedCharacters.upper.length)];
+    if (numbers) password += allowedCharacters.number[cryptoRandInt(allowedCharacters.number.length)];
+    if (special) password += allowedCharacters.special[cryptoRandInt(allowedCharacters.special.length)];
 
     // If the password is not long enough, add random characters
     const availableTypes = []
@@ -137,21 +157,25 @@ export const generatePassword = ({
     const scaleSum = availableTypes.reduce((sum, item) => sum + item.weight, 0)
     
     while (password.length < length) {
-        const random = Math.random() * scaleSum
+        const random = cryptoRandFloat() * scaleSum
         let currentSum = 0
         
         for (const item of availableTypes) {
             currentSum += item.weight
             if (random <= currentSum) {
                 const chars = allowedCharacters[item.type as keyof typeof allowedCharacters]
-                password += chars[Math.floor(Math.random() * chars.length)]
+                password += chars[cryptoRandInt(chars.length)]
                 break
             }
         }
     }
 
-    // Randomly shuffle the password
-    password = password.split('').sort(() => Math.random() - 0.5).join('')
+    const arr = password.split('')
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = cryptoRandInt(i + 1);
+        [arr[i], arr[j]] = [arr[j], arr[i]]
+    }
+    password = arr.join('')
 
     return password
 }
