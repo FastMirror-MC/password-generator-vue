@@ -2,7 +2,8 @@
 import { useModel } from 'vue';
 
 const props = defineProps<{
-    modelValue: boolean
+    modelValue: boolean,
+    ariaLabelledby?: string
 }>()
 
 const state = useModel(props, 'modelValue')
@@ -12,7 +13,7 @@ const state = useModel(props, 'modelValue')
 <template>
     <div class="switch-wrapper" :class="{
         active: state,
-    }" @click.prevent="state = !state">
+    }" role="switch" :aria-checked="state" :aria-labelledby="ariaLabelledby" tabindex="0" @click.prevent="state = !state" @keydown.enter.prevent="state = !state" @keydown.space.prevent="state = !state">
         <div class="switch__track">
             <div class="switch__inner">
                 <div class="switch__trumb"></div>
