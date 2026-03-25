@@ -19,6 +19,13 @@ jobs:
       - run: pnpm install
       - run: pnpm build
 
+      # 新增：从 PROD 分支拉取 CNAME 并复制到 dist
+      - name: Fetch CNAME from PROD
+        run: |
+          git fetch origin PROD
+          git checkout origin/PROD -- CNAME 2>/dev/null || true
+          if [ -f CNAME ]; then cp CNAME dist/; fi
+
       - name: Release to PROD Branch
         uses: casperdcl/push-dir@v1
         with:
